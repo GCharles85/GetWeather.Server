@@ -15,11 +15,17 @@ namespace MyBlazorApp.Controllers
             _httpClient = httpClient;
         }
 
-        [HttpGet("{city}")]
-        public async Task<IActionResult> GetWeather(string city)
+        [HttpGet("forecast")]
+        public async Task<IActionResult> GetWeather([FromQuery] double lat, [FromQuery] double lon)
         {
-            var url = $"https://www.metaweather.com/api/location/search/?query={city}";
+            // Construct the URL with the provided latitude and longitude
+            var apiKey = "98f72dc80cc8da714dbc55f1a67db8b0"; // Replace with your actual API key
+            var url = $"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid={apiKey}";
+
+            // Make the HTTP request to the external API
             var response = await _httpClient.GetStringAsync(url);
+
+            // Return the response from the external API
             return Ok(response);
         }
     }
